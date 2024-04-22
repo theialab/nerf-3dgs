@@ -1,0 +1,433 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="description" content="Does Gaussian Splatting need SFM Initialization?" />
+  <meta name="keywords" content="Does Gaussian Splatting need SFM Initialization?" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Does Gaussian Splatting need SFM Initialization?</title>
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet" />
+
+  <link rel="stylesheet" href="./static/css/bulma.min.css" />
+  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css" />
+  <link rel="stylesheet" href="./static/css/bulma-slider.min.css" />
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css" />
+  <link rel="stylesheet" href="./static/css/index.css" />
+  <link rel="stylesheet" href="./static/css/dics.original.css" />
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+  <script src="static/js/dics.original.js"></script>
+  <script src="static/js/img_slide.js"></script>
+  <script src="static/js/video_comparison.js"></script>
+</head>
+
+<style>
+.hero {
+  position: relative;
+  z-index: 1;
+}
+
+.hero::before {
+  background-image: url('static/images/teaser_room.png');
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  content: '';
+  display: block;
+  left: 0.45em;
+  opacity: 0.1;
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+}
+
+.hero .hero-body {
+  padding: 7em 0;
+}
+
+.hero .title,
+.hero .subtitle {
+  position: relative;
+  color: black;
+  z-index: 2;
+  text-align: center;
+  width: 100%;
+}
+
+.hero .title {
+  font-size: 2em;
+}
+
+.hero .subtitle {
+    font-size: 1.5em;
+}
+
+.authors a {
+  color: #422f25;
+  font-size: 1.5em;
+  font-weight: bold;
+  margin-bottom: 1.5rem;
+  text-decoration: none;
+}
+
+.authors a:hover,
+figcaption a:hover {
+  color: #BB9B7B
+}
+
+.affiliation {
+  font-size: 1.2em;
+}
+
+.button {
+  background-color: #422f25;
+  color: rgb(255, 255, 255);
+  margin: 1rem 0;
+  transition: background-color 0.3s ease;
+}
+
+.button:hover {
+  background-color: #BB9B7B;
+  color: #271d17; /* ?? */
+}
+
+.abstract-section, .acknowledgements-section{
+  background-color: #efeff8;
+  margin: 2em 0;
+  padding: 2em;
+  text-align: justify;
+}
+
+.bibtex-background pre,
+.bibtex-background code {
+  background-color: #d4cfca;
+  border-radius: 15px;
+  color: rgb(1, 1, 1);
+}
+
+.nerfies-footer-background {
+  background-color: #f7f4f2;
+}
+
+.abstract p,
+.acknowledgements p {
+  font-size: 20px;
+  text-align: justify;
+  hyphens: auto;
+}
+
+.abstract-image {
+  display: block;
+  height: auto;
+  margin: 0 auto;
+  max-width: 100%;
+}
+
+figcaption {
+  color: #666;
+  font-size: 1em;
+  font-style: normal;
+  margin-top: 0.5rem;
+  text-align: center;
+}
+
+.video-container {
+  height: 0;
+  margin: auto;
+  margin-top: 1em;
+  max-width: 100%;
+  overflow: hidden;
+  padding-bottom: 56.25%;
+  position: relative;
+}
+
+.video-container iframe {
+  height: 100%;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
+}
+
+.scene-btn {
+  padding: 10px 20px;
+  white-space: nowrap;
+  width: 170px;
+}
+
+.white-background {
+  background-color: #ffffff;
+}
+
+</style>
+
+
+<body>
+  <nav class="navbar" role="navigation" aria-label="main navigation">
+    <div class="navbar-brand">
+      <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </a>
+    </div>
+  </nav>
+
+  <section class="hero white-background">
+    <div class="hero-body">
+      <div class="container is-max-desktop">
+        <div class="columns is-centered">
+          <div class="column has-text-centered">
+            <h1 class="title is-1 publication-title" style="color: black;">
+              Does Gaussian Splatting need SFM Initialization?
+            </h1>
+            <div class="authors">
+              <a href="https://scholar.google.com/citations?user=mkzIURcAAAAJ&hl=en" target="_blank">Yalda Foroutan</a><sup>1</sup> &nbsp;
+              <a href="https://scholar.google.com/citations?hl=en&user=h-qFKrQAAAAJ" target="_blank">Daniel Rebain</a><sup>2</sup> &nbsp;
+              <a href="https://scholar.google.com/citations?user=pr6rIJEAAAAJ&hl=en" target="_blank">Kwang Moo Yi</a><sup>2</sup> &nbsp;
+              <a href="https://scholar.google.com/citations?user=1RmD-YsAAAAJ&hl=en" target="_blank">Andrea Tagliasacchi</a><sup>1,3,4</sup>
+            </div>
+            <p class="affiliation">
+              <sup>1</sup>Simon Fraser University,
+              <sup>2</sup>University of British Columbia,
+              <sup>3</sup>University of Toronto,
+              <sup>4</sup>Google DeepMind
+            </p>
+            <div class="buttons are-large has-addons is-centered">
+              <a class="button" href="https://arxiv.org/pdf/2404.12547.pdf" target="_blank">Paper</a>
+              <a class="button" href="URL_TO_CODE" target="_blank">Code</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>    
+  </section>
+
+
+<!-- <section class="section">
+  <div class="container">
+    <div class="video-container" style="max-width: 80%; margin-left: auto; margin-right: auto;">
+      <h2 class="title is-2">Overview Video</h2>
+      <h2 class="title is-2 has-text-centered" style="color: black;">Overview Video</h2>
+      <iframe width="560" height="315" src="https://www.youtube.com/embed/sbxoqC76PJs" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
+  </div>
+</section> -->
+  
+
+<section class="section abstract">
+  <div class="container">
+    <div class="content" style="max-width: 80%; margin-left: auto; margin-right: auto;">
+      <h2 class="title is-2 has-text-centered" style="color: black;">Abstract</h2>
+      <p>
+        3D Gaussian Splatting has recently been embraced as a versatile and effective method for scene reconstruction and novel view synthesis, owing to its high-quality results and compatibility with hardware rasterization.
+        Despite its advantages, Gaussian Splatting's reliance on high-quality point cloud initialization by Structure-from-Motion (SFM) algorithms is a significant limitation to be overcome.
+        To this end, we investigate various initialization strategies for Gaussian Splatting and delve into how volumetric reconstructions from Neural Radiance Fields (NeRF) can be utilized to bypass the dependency on SFM data.
+        Our findings demonstrate that random initialization can perform much better and that by employing a combination of improved initialization strategies and structure distillation from low-cost NeRF models, it is possible to achieve equivalent results, or at times even superior, to those obtained from SFM initialization.
+      </p>
+      <figure>
+        <img src="static/images/teaser_bicycle.png" alt="Descriptive text for image" class="abstract-image">
+        <figcaption style="font-style: normal;">
+          COLMAP (Left) vs. NeRF-based (Right) initialization point clouds for Gaussian Splatting.
+          The NeRF-based initialization provides a much more complete model of the scene structure, while also being faster to construct with posed images.
+        </figcaption>
+    </div>
+  </div>
+</section>
+
+<script>
+  function showScene(sceneId) {
+    const scenes = document.querySelectorAll('.image-container');
+    scenes.forEach(scene => scene.style.display = 'none');
+
+    const selectedScene = document.getElementById(sceneId + '-images');
+    if (selectedScene) {
+      console.log("Found scene to show:", sceneId + '-images');
+      selectedScene.style.display = 'block';
+    }
+  };
+</script>
+  
+<section class="section">
+  <div class="container">
+    <h2 class="title is-2 has-text-centered" style="color: black;">Visualization</h2>
+  </div>
+  <div class="container">
+    <div class="buttons are-large has-addons is-centered">
+      <button id="stump-button" class="button scene-btn" onclick="showScene('stump')">Stump</button>
+      <button class="button scene-btn" onclick="showScene('bicycle')">Bicycle</button>
+      <button class="button scene-btn" onclick="showScene('sydney')">Sydney</button>
+      <button class="button scene-btn" onclick="showScene('windmill')">Windmill</button>
+      <button class="button scene-btn" onclick="showScene('nyc')">New York</button>
+      <button class="button scene-btn" onclick="showScene('dr')">Dr Johnson </button>
+    </div>
+  </div>
+  <div class="hero-body image-container" id="stump-images" >
+    <div class="parent-video-compare-container">
+      <div class="b-dics" , style="width: 100%; font-weight: 600;">
+        <img src="static/images/stump_rand.png" alt="Random Initialization">
+        <img src="static/images/stump_colmap.png" alt="COLMAP Initialization">
+        <img src="static/images/stump_rand_depth.png" alt="Random Initialization + Depth Loss">
+        <img src="static/images/stump_na.png" alt="NerfAcc Initialization + Depth Loss">
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-body image-container" id="bicycle-images">
+    <div class="parent-video-compare-container">
+      <div class="b-dics" , style="width: 100%; font-weight: 600;">
+        <img src="static/images/bicycle_rand.png" alt="Random Initialization">
+        <img src="static/images/bicycle_colmap.png" alt="COLMAP Initialization">
+        <img src="static/images/bicycle_rand_depth.png" alt="Random Initialization + Depth Loss">
+        <img src="static/images/bicycle_na.png" alt="NerfAcc Initialization + Depth Loss">
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-body image-container" id="sydney-images">
+    <div class="parent-video-compare-container">
+      <div class="b-dics" , style="width: 100%; font-weight: 600;">
+        <img src="static/images/sydney_rand.png" alt="Random Initialization">
+        <img src="static/images/sydney_colmap.png" alt="COLMAP Initialization">
+        <img src="static/images/sydney_rand_depth.png" alt="Random Initialization + Depth Loss">
+        <img src="static/images/sydney_na.png" alt="NerfAcc Initialization + Depth Loss">
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-body image-container" id="windmill-images">
+    <div class="parent-video-compare-container">
+      <div class="b-dics" , style="width: 100%; font-weight: 600;">
+        <img src="static/images/windmill_rand.png" alt="Random Initialization">
+        <img src="static/images/windmill_colmap.png" alt="COLMAP Initialization">
+        <img src="static/images/windmill_rand_depth.png" alt="Random Initialization + Depth Loss">
+        <img src="static/images/windmill_na.png" alt="NerfAcc Initialization + Depth Loss">
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-body image-container" id="nyc-images">
+    <div class="parent-video-compare-container">
+      <div class="b-dics" , style="width: 100%; font-weight: 600;">
+        <img src="static/images/nyc_rand.png" alt="Random Initialization">
+        <img src="static/images/nyc_colmap.png" alt="COLMAP Initialization">
+        <img src="static/images/nyc_rand_depth.png" alt="Random Initialization + Depth Loss">
+        <img src="static/images/nyc_na.png" alt="NerfAcc Initialization + Depth Loss">
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-body image-container" id="dr-images">
+    <div class="parent-video-compare-container">
+      <div class="b-dics" , style="width: 100%; font-weight: 600;">
+        <img src="static/images/dr_rand.png" alt="Random Initialization">
+        <img src="static/images/dr_colmap.png" alt="COLMAP Initialization">
+        <img src="static/images/dr_rand_depth.png" alt="Random Initialization + Depth Loss">
+        <img src="static/images/dr_na.png" alt="NerfAcc Initialization + Depth Loss">
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="content" style="max-width: 80%; margin-left: auto; margin-right: auto;">
+      <h2 class="title is-2 has-text-centered" style="color: black;">Acknowledgements</h2>
+      <p>This work was supported in part by the Natural Sciences and Engineering Research Council of Canada (NSERC) 
+        Discovery Grant [2023-05617], NSERC Collaborative Research and Development Grant, the SFU Visual Computing Research Chair, 
+        Google, Digital Research Alliance of Canada, and Advanced Research Computing at the University of British Columbia.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section bibtex-background">
+  <div class="container">
+    <div class="content">
+      <div class="content" style="max-width: 80%; margin-left: auto; margin-right: auto;">
+      <h2 class="title is-2 has-text-centered" style="color: black;">BibTeX</h2>
+      <div class="bibtex-box">
+        <pre><code>@INPROCEEDINGS{Foroutan2024arxiv,
+          author = {Yalda Foroutan, Daniel Rebain, Kwang Moo Yi, Andrea Tagliasacchi},
+          title = {Does Gaussian Splatting need SFM Initialization?},
+          booktitle = {arxiv},
+          year = {2024}
+        }</code></pre>
+      </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</section>
+  <footer class="footer nerfies-footer-background">
+    <div class="container">
+      <div class="columns is-centered">
+        <div class="column is-8">
+          <div class="content">
+            <p>
+              This page is modified from
+              <a href="https://github.com/nerfies/nerfies.github.io">Nerfies</a>.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  </div>
+</section>
+
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var videos = document.querySelectorAll('.kitti360');
+
+      videos.forEach(function (video) {
+        video.playbackRate = 0.3;
+      });
+
+      new Dics({
+        container: document.querySelectorAll('.b-dics')[0],
+        hideTexts: false,
+        textPosition: "bottom",
+      });
+      new Dics({
+        container: document.querySelectorAll('.b-dics')[1],
+        hideTexts: false,
+        textPosition: "bottom"
+      });
+      new Dics({
+        container: document.querySelectorAll('.b-dics')[2],
+        hideTexts: false,
+        textPosition: "bottom"
+      });
+      new Dics({
+        container: document.querySelectorAll('.b-dics')[3],
+        hideTexts: false,
+        textPosition: "bottom"
+      });
+      new Dics({
+        container: document.querySelectorAll('.b-dics')[4],
+        hideTexts: false,
+        textPosition: "bottom"
+      });
+      new Dics({
+        container: document.querySelectorAll('.b-dics')[5],
+        hideTexts: false,
+        textPosition: "bottom"
+      });
+      
+      document.querySelectorAll('#stump-button')[0].click()
+    });
+    initComparisons();
+  </script>
+</body>
+
+</html>
