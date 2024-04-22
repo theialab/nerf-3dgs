@@ -1,5 +1,4 @@
-# nerf-3dgs
-Does Gaussian Splatting need SFM Initialization?
+# Does Gaussian Splatting need SFM Initialization?
 
 
 This is the repository that contains NeRF-3DGS webpage.
