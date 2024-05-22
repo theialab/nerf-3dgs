@@ -7,7 +7,7 @@ If you find NeRF-3DGS useful for your work please cite:
 ```
 @INPROCEEDINGS{Foroutan2024arxiv,
   author    = {Yalda Foroutan, Daniel Rebain, Kwang Moo Yi, Andrea Tagliasacchi},
-  title     = {Does Gaussian Splatting need SFM Initialization?},
+  title     = {Evaluating Alternatives to SFM Point Cloud Initialization for Gaussian Splatting},
   booktitle = {arxiv},
   year = {2024}
 }
