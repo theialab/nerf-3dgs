@@ -1,4 +1,4 @@
-# Does Gaussian Splatting need SFM Initialization?
+# Evaluating Alternatives to SFM Point Cloud Initialization for Gaussian Splatting
 
 
 This is the repository that contains NeRF-3DGS webpage.
